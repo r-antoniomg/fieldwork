@@ -45,6 +45,9 @@
 
 <script>
 (function () {
+  const siteBaseUrl = {{ site.baseurl | default: '' | jsonify }};
+  const objectItems = {{ site.data.practice
+
   const objectItems = {{ site.data.practice_objects | jsonify }};
 
   const fieldnotePosts = [
@@ -74,6 +77,26 @@
   const headingEl = document.getElementById('fw-generated-tag-view-gallery-heading');
   const galleryEl = document.getElementById('fw-generated-tag-view-gallery');
   const emptyEl = document.getElementById('fw-generated-tag-view-empty');
+
+function withBaseUrl(path) {
+  if (!path) return '';
+
+  const pathString = String(path);
+
+  if (
+    pathString.startsWith('http://') ||
+    pathString.startsWith('https://') ||
+    pathString.startsWith('//')
+  ) {
+    return pathString;
+  }
+
+  const normalizedPath = pathString.startsWith('/')
+    ? pathString
+    : `/${pathString}`;
+
+  return `${siteBaseUrl}${normalizedPath}`;
+}
 
   function normalize(value) {
     return String(value || '').trim().toLowerCase();
@@ -109,7 +132,7 @@
     if (record.image_path) {
       const img = document.createElement('img');
       img.className = 'fw-generated-view-image';
-      img.src = record.image_path;
+      img.src = withBaseUrl(record.image_path);
       img.alt = record.title || 'Fieldwork object image';
       wrapper.appendChild(img);
     }
