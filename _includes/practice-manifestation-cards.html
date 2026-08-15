@@ -1,0 +1,77 @@
+{% comment %}
+  Fieldwork Practice Manifestation Cards
+
+  Purpose:
+  - Reads manifestation metadata from _data/practice_manifestations.yml
+  - Displays homepage cards only for manifestations whose pages exist
+  - Uses a shared logo/symbol image plus metadata-rendered manifestation title
+  - Automatically applies 2-column layout for 1-4 displayed cards and 3-column layout for 5+ displayed cards
+
+  Expected YAML fields:
+  - id: inquiry
+    title: inquiry
+    permalink: /inquiry/
+    description: questions, experiments, exploration
+    logo: /assets/images/fieldwork-logo-wb.jpg
+
+  Include usage:
+  {% include practice-manifestation-cards.html %}
+{% endcomment %}
+
+{% assign displayed_manifestations = "" | split: "" %}
+
+{% for manifestation in site.data.practice_manifestations %}
+  {% assign target_page = site.pages | where: "permalink", manifestation.permalink | first %}
+  {% if target_page %}
+    {% assign displayed_manifestations = displayed_manifestations | push: manifestation %}
+  {% endif %}
+{% endfor %}
+
+{% assign manifestation_count = displayed_manifestations | size %}
+
+{% if manifestation_count > 0 %}
+
+  {% if manifestation_count <= 4 %}
+    {% assign manifestation_grid_class = "fw-manifestation-gallery--2col" %}
+  {% else %}
+    {% assign manifestation_grid_class = "fw-manifestation-gallery--3col" %}
+  {% endif %}
+
+  <div class="fw-manifestation-gallery {{ manifestation_grid_class }}">
+
+    {% for manifestation in displayed_manifestations %}
+
+      <a class="fw-manifestation-card" href="{{ manifestation.permalink | relative_url }}">
+
+        {% if manifestation.logo %}
+          <div class="fw-manifestation-card-image-wrapper">
+            <img
+              class="fw-manifestation-card-image"
+              src="{{ manifestation.logo | relative_url }}"
+              alt="{{ manifestation.title | escape }} logo">
+          </div>
+        {% endif %}
+
+        <div class="fw-manifestation-card-content">
+
+          {% if manifestation.title %}
+            <h3 class="fw-manifestation-card-title">
+              {{ manifestation.title }}
+            </h3>
+          {% endif %}
+
+          {% if manifestation.description %}
+            <p class="fw-manifestation-card-description">
+              {{ manifestation.description }}
+            </p>
+          {% endif %}
+
+        </div>
+
+      </a>
+
+    {% endfor %}
+
+  </div>
+
+{% endif %}

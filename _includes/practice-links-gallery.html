@@ -1,0 +1,129 @@
+{% comment %}
+  Fieldwork practice links gallery
+
+  Purpose:
+  - Renders manifestation navigation from _data/practice_links.yml.
+  - On manifestation pages, renders "Beyond [manifestation]" and selects
+    related destinations whose targets include the current manifestation.
+  - On the 404 page, renders "Explore Fieldwork" and selects all active
+    manifestation destinations.
+  - A destination is rendered only when a matching Jekyll page exists and
+    that page's front matter contains active: true.
+  - Displays each destination using a symbol image plus a metadata-rendered
+    wordmark label.
+
+  Expected destination-page front matter:
+  manifestation: inquiry
+  active: true
+
+  Expected fields in _data/practice_links.yml:
+  - title
+  - manifestation
+  - url
+  - image_path
+  - alt
+  - targets
+
+  Standard manifestation-page usage:
+  {% include practice-links-gallery.html %}
+
+  404-page usage with front matter manifestation: 404:
+  {% include practice-links-gallery.html %}
+
+  Optional explicit target:
+  {% include practice-links-gallery.html target="inquiry" %}
+
+  Optional heading override:
+  {% include practice-links-gallery.html heading="Explore Fieldwork" %}
+
+  Optional layout:
+  {% include practice-links-gallery.html layout="third" %}
+{% endcomment %}
+
+{% assign current_manifestation = include.target | default: page.manifestation | append: "" | downcase %}
+{% assign manifestation_label = include.label | default: page.title | default: current_manifestation | downcase %}
+{% assign gallery_layout = include.layout | default: "third" %}
+{% assign is_404_context = false %}
+
+{% if current_manifestation == "404" %}
+  {% assign is_404_context = true %}
+{% endif %}
+
+{% if include.heading %}
+  {% assign section_heading = include.heading %}
+{% elsif is_404_context %}
+  {% assign section_heading = "Explore fieldwork" %}
+{% else %}
+  {% capture section_heading %}Beyond {{ manifestation_label }}{% endcapture %}
+{% endif %}
+
+{% assign active_link_count = 0 %}
+
+{% for link_item in site.data.practice_links %}
+  {% assign destination_page = site.pages | where: "manifestation", link_item.manifestation | first %}
+  {% assign is_related = false %}
+
+  {% if is_404_context %}
+    {% assign is_related = true %}
+  {% elsif link_item.targets contains current_manifestation %}
+    {% assign is_related = true %}
+  {% endif %}
+
+  {% if is_related and destination_page and destination_page.active %}
+    {% assign active_link_count = active_link_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if active_link_count > 0 %}
+  <section class="fw-practice-links-section">
+    <h2 class="fw-practice-links-heading">{{ section_heading | strip }}</h2>
+
+    <figure class="{{ gallery_layout }} fw-practice-links-gallery {{ include.class }}">
+      {% for link_item in site.data.practice_links %}
+        {% assign destination_page = site.pages | where: "manifestation", link_item.manifestation | first %}
+        {% assign is_related = false %}
+
+        {% if is_404_context %}
+          {% assign is_related = true %}
+        {% elsif link_item.targets contains current_manifestation %}
+          {% assign is_related = true %}
+        {% endif %}
+
+        {% if is_related and destination_page and destination_page.active %}
+          {% assign link_label = link_item.title | default: link_item.manifestation | default: link_item.alt %}
+          {% assign link_url = destination_page.url | default: link_item.url %}
+
+          {% if link_url %}
+            <a
+              class="fw-practice-link"
+              href="{{ link_url | relative_url }}"
+              {% if link_item.title %}title="{{ link_item.title | escape_once }}"{% endif %}>
+          {% else %}
+            <span class="fw-practice-link fw-practice-link--no-url">
+          {% endif %}
+
+            {% if link_item.image_path %}
+              <img
+                class="fw-practice-link-image"
+                src="{{ link_item.image_path | relative_url }}"
+                alt="{% if link_item.alt %}{{ link_item.alt | escape_once }}{% else %}{{ link_label | escape_once }}{% endif %}">
+            {% endif %}
+
+            {% if link_label %}
+              <span class="fw-practice-link-label">{{ link_label }}</span>
+            {% endif %}
+
+          {% if link_url %}
+            </a>
+          {% else %}
+            </span>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% if include.caption %}
+        <figcaption>{{ include.caption | markdownify | remove: "<p>" | remove: "</p>" }}</figcaption>
+      {% endif %}
+    </figure>
+  </section>
+{% endif %}

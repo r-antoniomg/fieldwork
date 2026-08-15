@@ -1,0 +1,60 @@
+- title: 'Personal library catalogue'
+  description: 'A fully-functioning instance of Koha with my personal book collection'
+  image_path: http://fieldwork-by-antonio.ca/books-background-image-crop.jpg
+  url: http://library.fieldworkpractice.ca/
+  targets:
+    - inquiry
+  tags:
+    - Online library catalogs
+    - Reading
+    - Technology
+  mode: personal project
+  status: ongoing
+- title: 'Spotify wrapped (Jupyter notebook)'
+  description: 'A Jupyter notebook and synthetic data set for analyzing Spotify data'
+  image_path: /assets/images/fieldwork-main.png
+  url: https://github.com/r-antoniomg/2025-love-data-week
+  targets:
+    - inquiry
+  tags:
+    - Electronic data processing
+    - Study and teaching
+    - Instructional and educational works
+  mode: teaching
+  status: complete
+- title: 'Stuff without context (CollectionBuilder site)'
+  description: 'My first CollectionBuilder site done as part of the Digital Humanities Summer Institute, 2023'
+  image_path: https://r-antoniomg.github.io/stuff-without-context/objects/fashion_poses.jpg
+  url: https://r-antoniomg.github.io/stuff-without-context/
+  targets:
+    - inquiry
+    - making
+  tags:
+    - Visual works
+    - Digital libraries
+    - Study and teaching
+  mode: study
+  status: complete
+- title: 'Image tiles (Jupyter notebook)'
+  description: 'A Jupyter notebook to create a tile out of images, identifying the predominant colour to use as a background'
+  image_path: /assets/images/fieldwork-main.png
+  url: https://github.com/r-antoniomg/image-tiles
+  targets:
+    - inquiry
+  tags:
+    - Image analysis
+    - Information visualization
+  mode: personal project
+  status: complete
+- title: 'Shared crafting inventory (CollectionBuilder site)'
+  description: 'This collection features images of crafting supplies (primarily wax stamps and wax seals) that are up for sharing among the owners of these supplies, as well as to plan purchases of new supplies by avoiding duplication.'
+  image_path: https://i.ibb.co/bfSj8sC/2026-05-16-crafting-banner-image.png
+  url: https://r-antoniomg.github.io/shared-crafting-inventory/about.html
+  targets:
+    - inquiry
+    - making
+  tags:
+    - Digital libraries
+    - 'Hobbies--Equipment and supplies'
+  mode: personal project
+  status: ongoing

@@ -1,0 +1,191 @@
+{% comment %}
+  Fieldwork Generated Influences View
+  Purpose:
+  - Generates a client-side influences view filtered by URL query parameter.
+  - Expected URL pattern: /influences-view/?target=inquiry
+  - Reads influence records from _data/practice_influences.yml.
+  - Filters records whose targets include the requested target.
+  - Renders the page heading as "[Manifestation] influences".
+  - Renders all matching influence cards using the same card classes as practice-influences.html.
+  - Renders a stable back link to the relevant manifestation page, based on the target parameter.
+
+  Notes:
+  - Liquid cannot read browser query parameters at build time, so the target-filtered view is rendered with JavaScript.
+  - If no target is supplied, the view displays guidance rather than a full master list.
+  - This keeps the expected navigation path manifestation page -> influences view -> manifestation page.
+
+  Include usage:
+  {% include practice-generated-influences-view.html %}
+{% endcomment %}
+
+<section
+  id="fw-generated-influences-view"
+  class="fw-generated-influences-view"
+  data-influences='{{ site.data.practice_influences | jsonify | escape }}'>
+
+  <h1 id="fw-generated-influences-title" class="fw-generated-influences-title">Fieldwork influences</h1>
+
+  <div id="fw-generated-influences-status" class="fw-generated-influences-status" hidden></div>
+
+  <div id="fw-generated-influences-grid" class="fw-influence-grid" hidden></div>
+
+  <p id="fw-generated-influences-back" class="fw-generated-influences-back" hidden></p>
+</section>
+
+<script>
+(function () {
+  const viewEl = document.getElementById('fw-generated-influences-view');
+  const titleEl = document.getElementById('fw-generated-influences-title');
+  const statusEl = document.getElementById('fw-generated-influences-status');
+  const gridEl = document.getElementById('fw-generated-influences-grid');
+  const backEl = document.getElementById('fw-generated-influences-back');
+
+  if (!viewEl || !titleEl || !statusEl || !gridEl || !backEl) return;
+
+  let influences = [];
+  try {
+    influences = JSON.parse(viewEl.getAttribute('data-influences') || '[]');
+  } catch (error) {
+    influences = [];
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const target = normalize(params.get('target'));
+
+  function normalize(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function asArray(value) {
+    if (!value) return [];
+    if (Array.isArray(value)) return value;
+    return [value];
+  }
+
+  function toDisplayLabel(value) {
+    const cleaned = String(value || '').trim().replace(/[-_]+/g, ' ');
+    if (!cleaned) return '';
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+  }
+
+  function targetMatches(record, requestedTarget) {
+    if (!record || !requestedTarget) return false;
+    return asArray(record.targets).some(function (recordTarget) {
+      return normalize(recordTarget) === requestedTarget;
+    });
+  }
+
+  function createElement(tagName, className, textContent) {
+    const element = document.createElement(tagName);
+    if (className) element.className = className;
+    if (textContent) element.textContent = textContent;
+    return element;
+  }
+
+  function createLink(className, href, textContent) {
+    const link = document.createElement('a');
+    link.className = className;
+    link.href = href;
+    link.textContent = textContent;
+    return link;
+  }
+
+  function renderInfluenceCard(item) {
+    const article = createElement('article', 'fw-influence-card');
+    const header = createElement('header', 'fw-influence-card-header');
+
+    if (item.label) {
+      const title = createElement('h3', 'fw-influence-card-title', item.label);
+      header.appendChild(title);
+    }
+
+    if (item.relationship) {
+      const relationship = createElement('div', 'fw-influence-card-relationship');
+      const relationshipLabel = createElement('span', 'fw-influence-card-relationship-label', 'influence type:');
+      const relationshipValue = createElement('span', 'fw-influence-card-relationship-value', String(item.relationship).replace(/-/g, ' '));
+      relationship.appendChild(relationshipLabel);
+      relationship.appendChild(document.createTextNode(' '));
+      relationship.appendChild(relationshipValue);
+      header.appendChild(relationship);
+    }
+
+    article.appendChild(header);
+
+    if (item.description) {
+      article.appendChild(createElement('p', 'fw-influence-card-description', item.description));
+    }
+
+    if (item.url || item.social || item.uri) {
+      const links = createElement('div', 'fw-influence-card-links');
+
+      if (item.url) {
+        links.appendChild(createLink('fw-influence-card-link', item.url, 'website'));
+      }
+
+      if (item.social && typeof item.social === 'object') {
+        Object.keys(item.social).forEach(function (platform) {
+          const socialData = item.social[platform] || {};
+          if (socialData.url) {
+            links.appendChild(createLink('fw-influence-card-link', socialData.url, platform.toLowerCase()));
+          } else if (socialData.handle) {
+            const textLink = createElement('span', 'fw-influence-card-link fw-influence-card-link--text', platform.toLowerCase());
+            links.appendChild(textLink);
+          }
+        });
+      }
+
+      if (item.uri) {
+        links.appendChild(createLink('fw-influence-card-link', item.uri, 'authority record'));
+      }
+
+      article.appendChild(links);
+    }
+
+    return article;
+  }
+
+  function renderBackLink(requestedTarget, displayLabel) {
+    if (!requestedTarget) {
+      backEl.hidden = true;
+      return;
+    }
+
+    const backHref = {{ '/' | relative_url | jsonify }} + requestedTarget + '/';
+    const backLink = createLink('fw-generated-influences-back-link', backHref, '\u2190 Back to ' + displayLabel + ' page');
+    backEl.innerHTML = '';
+    backEl.appendChild(backLink);
+    backEl.hidden = false;
+  }
+
+  if (!target) {
+    titleEl.textContent = 'Fieldwork influences';
+    statusEl.textContent = 'Influences are organized through Fieldwork manifestations. Start from a manifestation page to explore related influences.';
+    statusEl.hidden = false;
+    gridEl.hidden = true;
+    renderBackLink('', '');
+    return;
+  }
+
+  const displayLabel = toDisplayLabel(target);
+  const matchingInfluences = influences.filter(function (item) {
+    return targetMatches(item, target);
+  });
+
+  titleEl.textContent = displayLabel + ' influences';
+  renderBackLink(target, displayLabel);
+
+  if (matchingInfluences.length === 0) {
+    statusEl.textContent = 'No influence records have been added for ' + displayLabel.toLowerCase() + ' yet.';
+    statusEl.hidden = false;
+    gridEl.hidden = true;
+    return;
+  }
+
+  matchingInfluences.forEach(function (item) {
+    gridEl.appendChild(renderInfluenceCard(item));
+  });
+
+  statusEl.hidden = true;
+  gridEl.hidden = false;
+})();
+</script>

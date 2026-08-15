@@ -1,0 +1,84 @@
+{% comment %}
+  Fieldwork randomized 404 object gallery
+
+  Purpose:
+  - Reads image records from _data/practice_objects.yml.
+  - Keeps only records that contain an image_path.
+  - Randomizes the eligible records in the visitor's browser.
+  - Displays up to five images as an uncaptioned horizontal image bar.
+  - Renders nothing when no eligible images exist.
+
+  Usage:
+  {% include practice-404-gallery.html %}
+
+  Optional image-count override:
+  {% include practice-404-gallery.html limit=4 %}
+{% endcomment %}
+
+{% assign gallery_limit = include.limit | default: 5 %}
+{% assign eligible_objects = site.data.practice_objects | where_exp: "item", "item.image_path" %}
+
+{% if eligible_objects and eligible_objects.size > 0 %}
+  <section
+    class="fw-404-object-gallery"
+    data-image-limit="{{ gallery_limit }}"
+    aria-label="A selection of Fieldwork objects">
+    <div class="fw-404-object-gallery-track"></div>
+    <noscript>
+      <p class="fw-404-object-gallery-noscript">
+        This image selection requires JavaScript.
+      </p>
+    </noscript>
+  </section>
+
+  <script>
+    (function () {
+      const gallery = document.currentScript.previousElementSibling;
+      if (!gallery || !gallery.classList.contains('fw-404-object-gallery')) return;
+
+      const track = gallery.querySelector('.fw-404-object-gallery-track');
+      const imageLimit = Number.parseInt(gallery.dataset.imageLimit, 10) || 5;
+      const objects = {{ eligible_objects | jsonify }};
+
+      if (!track || !Array.isArray(objects) || objects.length === 0) {
+        gallery.hidden = true;
+        return;
+      }
+
+      function shuffledCopy(items) {
+        const shuffled = items.slice();
+
+        for (let index = shuffled.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [shuffled[index], shuffled[randomIndex]] =
+            [shuffled[randomIndex], shuffled[index]];
+        }
+
+        return shuffled;
+      }
+
+      const selectedObjects = shuffledCopy(objects).slice(0, imageLimit);
+
+      selectedObjects.forEach(function (item) {
+        if (!item || !item.image_path) return;
+
+        const figure = document.createElement('figure');
+        figure.className = 'fw-404-object-gallery-item';
+
+        const image = document.createElement('img');
+        image.className = 'fw-404-object-gallery-image';
+        image.src = {{ '/' | relative_url | jsonify }}.replace(/\/$/, '') + item.image_path;
+        image.alt = item.title ? String(item.title) : '';
+        image.loading = 'eager';
+        image.decoding = 'async';
+
+        figure.appendChild(image);
+        track.appendChild(figure);
+      });
+
+      if (track.children.length === 0) {
+        gallery.hidden = true;
+      }
+    }());
+  </script>
+{% endif %}

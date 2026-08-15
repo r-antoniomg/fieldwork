@@ -1,0 +1,46 @@
+- title: "inquiry"
+  manifestation: inquiry
+  url: /inquiry/
+  image_path: /assets/images/fieldwork-logo-wb.jpg
+  alt: "inquiry"
+  targets:
+    - reflection
+
+- title: "movement"
+  manifestation: movement
+  url: /movement/
+  image_path: /assets/images/fieldwork-logo-wb.jpg
+  alt: "movement"
+  targets:
+    - inquiry
+    - reflection
+
+- title: "making"
+  manifestation: making
+  url: /making/
+  image_path: /assets/images/fieldwork-logo-wb.jpg
+  alt: "making"
+  targets:
+    - inquiry
+    - movement
+    - reflection
+
+- title: "reflection"
+  manifestation: reflection
+  url: /reflection/
+  image_path: /assets/images/fieldwork-logo-wb.jpg
+  alt: "reflection"
+  targets:
+    - inquiry
+    - making
+    - movement
+
+- title: "sandbox"
+  manifestation: sandbox
+  url: /sandbox/
+  image_path: /assets/images/fieldwork-logo-wb.jpg
+  alt: "sandbox"
+  targets:
+    - inquiry
+    - making
+    - reflection

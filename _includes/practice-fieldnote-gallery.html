@@ -1,0 +1,63 @@
+{% comment %}
+  Fieldwork Gallery Include (Prototype v1)
+
+  Usage:
+  {% include practice-fieldnote-gallery.html
+     ids="img-0000001,img-0000003,img-0000008"
+  %}
+
+  Behaviour:
+  - Retrieves records from site.data.practice_objects
+  - Displays image + title
+  - 1-4 images: 2-column grid
+  - 5+ images: 3-column grid
+{% endcomment %}
+
+{% assign requested_ids = include.ids | split: ',' %}
+{% assign image_count = requested_ids.size %}
+
+{% if image_count <= 4 %}
+  {% assign gallery_class = 'fw-fieldnote-gallery--2col' %}
+{% else %}
+  {% assign gallery_class = 'fw-fieldnote-gallery--3col' %}
+{% endif %}
+
+<div class="fw-fieldnote-gallery {{ gallery_class }}">
+
+  {% for requested_id in requested_ids %}
+
+    {% assign clean_id = requested_id | strip %}
+    {% assign matching_image = nil %}
+
+    {% for item in site.data.practice_objects %}
+      {% assign item_id = item.id | append: '' | strip %}
+      {% if item_id == clean_id %}
+        {% assign matching_image = item %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% if matching_image %}
+
+      <figure class="fw-fieldnote-gallery-item">
+
+        {% if matching_image.image_path %}
+          <img
+            class="fw-fieldnote-gallery-image"
+            src="{{ matching_image.image_path | relative_url }}"
+            alt="{{ matching_image.title | escape }}">
+        {% endif %}
+
+        {% if matching_image.title %}
+          <figcaption class="fw-fieldnote-gallery-caption">
+            {{ matching_image.title }}
+          </figcaption>
+        {% endif %}
+
+      </figure>
+
+    {% endif %}
+
+  {% endfor %}
+
+</div>

@@ -1,0 +1,78 @@
+{% comment %}
+  Fieldwork practice links gallery
+  Purpose:
+  - Renders the required Beyond [manifestation] section for manifestation pages.
+  - Reads link records from _data/practice_links.yml.
+  - Filters records by page.manifestation or an explicitly passed include.target.
+  - Displays each related manifestation using a symbol image plus a rendered text label.
+  - Keeps the label out of the image asset so wordmarks can be controlled through metadata and CSS.
+
+  Expected YAML fields in _data/practice_links.yml:
+  - title
+  - manifestation
+  - url
+  - image_path
+  - alt
+  - targets
+
+  Include usage:
+  {% include practice-links-gallery.html %}
+
+  Optional explicit target usage:
+  {% include practice-links-gallery.html target="inquiry" %}
+
+  Optional layout usage:
+  {% include practice-links-gallery.html layout="third" %}
+
+  Notes:
+  - The Beyond section is intentionally not conditional.
+  - If no records match the current manifestation, the heading still renders.
+  - In Fieldwork terms, missing Beyond links should be handled as incomplete data rather than by hiding the section.
+{% endcomment %}
+
+{% assign current_manifestation = include.target | default: page.manifestation %}
+{% assign manifestation_label = include.label | default: page.title | default: current_manifestation | downcase %}
+{% assign gallery_layout = include.layout %}
+
+{% if gallery_layout == nil or gallery_layout == "" %}
+  {% assign gallery_layout = "third" %}
+{% endif %}
+
+<section class="fw-practice-links-section">
+  <h2 class="fw-practice-links-heading">Beyond {{ manifestation_label }}</h2>
+
+  <figure class="{{ gallery_layout }} fw-practice-links-gallery {{ include.class }}">
+    {% for img in site.data.practice_links %}
+      {% if img.targets contains current_manifestation %}
+        {% assign link_label = img.title | default: img.manifestation | default: img.alt %}
+
+        {% if img.url %}
+          <a class="fw-practice-link" href="{{ img.url | relative_url }}"{% if img.title %} title="{{ img.title | escape_once }}"{% endif %}>
+        {% else %}
+          <span class="fw-practice-link fw-practice-link--no-url">
+        {% endif %}
+
+          {% if img.image_path %}
+            <img
+              class="fw-practice-link-image"
+              src="{{ img.image_path | relative_url }}"
+              alt="{% if img.alt %}{{ img.alt | escape_once }}{% else %}{{ link_label | escape_once }}{% endif %}">
+          {% endif %}
+
+          {% if link_label %}
+            <span class="fw-practice-link-label">{{ link_label }}</span>
+          {% endif %}
+
+        {% if img.url %}
+          </a>
+        {% else %}
+          </span>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if include.caption %}
+      <figcaption>{{ include.caption | markdownify | remove: "<p>" | remove: "</p>" }}</figcaption>
+    {% endif %}
+  </figure>
+</section>

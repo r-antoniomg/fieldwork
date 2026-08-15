@@ -1,0 +1,98 @@
+{% comment %}
+  Fieldwork practice development include
+  Purpose:
+  - Reads shared records from _data/practice_development.yml
+  - Filters records by page.manifestation or an explicitly passed include.target
+  - Groups records by mode
+  - Renders ISBD-inspired citation-like strings from structured YAML fields
+  - Renders the heading and section only when matching development records exist
+
+  Expected minimum YAML fields:
+  - title
+  - type
+  - mode
+  - targets
+
+  Common optional fields:
+  - place
+  - organization
+  - year
+  - description
+  - url
+
+  Display notes:
+  - The type field is intentionally not displayed in this version.
+  - A final period is added to each citation unless the citation already ends with ., !, or ?.
+  - If no matching records exist, this include renders nothing visible.
+{% endcomment %}
+
+{% assign current_target = include.target | default: page.manifestation %}
+{% if current_target %}
+  {% assign development_items = site.data.practice_development | where_exp: "item", "item.targets contains current_target" %}
+{% else %}
+  {% assign development_items = site.data.practice_development %}
+{% endif %}
+
+{% if development_items and development_items.size > 0 %}
+  {% assign mode_order = "study|teaching|professional-experience|self-directed-learning" | split: "|" %}
+
+  <section class="fw-metadata-block fw-practice-development">
+    <h2 class="fw-practice-development-heading">Practice development and evolution</h2>
+
+    {% for mode in mode_order %}
+      {% assign mode_items_unsorted = development_items | where: "mode", mode %}
+      {% if mode_items_unsorted.size > 0 %}
+        {% case mode %}
+          {% when "study" %}
+            {% assign mode_label = "Study" %}
+          {% when "teaching" %}
+            {% assign mode_label = "Teaching" %}
+          {% when "professional-experience" %}
+            {% assign mode_label = "Professional experience" %}
+          {% when "self-directed-learning" %}
+            {% assign mode_label = "Self-directed learning" %}
+          {% else %}
+            {% assign mode_label = mode | replace: "-", " " | capitalize %}
+        {% endcase %}
+
+        <section class="fw-development-mode fw-development-mode--{{ mode | slugify }}">
+          <h3>{{ mode_label }}</h3>
+          <ul class="fw-development-list">
+            {% assign mode_year_groups = mode_items_unsorted | group_by: "year" | sort: "name" | reverse %}
+            {% for year_group in mode_year_groups %}
+              {% assign mode_items = year_group.items | sort: "title" %}
+              {% for item in mode_items %}
+                <li class="fw-development-record">{% assign title_clean = item.title | default: "" | strip %}{% assign title_last = title_clean | slice: -1 %}{{ title_clean }}{% unless title_last == "." or title_last == "!" or title_last == "?" %}.{% endunless %}{% if item.place or item.organization or item.year %} -- {% endif %}{% if item.place %}{{ item.place | strip }}{% if item.organization %} : {% elsif item.year %}, {% endif %}{% endif %}{% if item.organization %}{{ item.organization | strip }}{% if item.year %}, {% endif %}{% endif %}{% if item.year %}{{ item.year }}{% endif %}{% if item.place or item.organization or item.year %}.{% endif %}{% if item.description %}
+                  <div class="fw-development-description">{{ item.description }}</div>{% endif %}{% if item.url %}
+                  <div class="fw-development-link"><a href="{{ item.url }}">Learn more</a></div>{% endif %}
+                </li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+    {% endfor %}
+
+    {% assign grouped_modes = development_items | group_by: "mode" %}
+    {% for group in grouped_modes %}
+      {% unless mode_order contains group.name %}
+        {% assign mode_label = group.name | replace: "-", " " | capitalize %}
+        <section class="fw-development-mode fw-development-mode--{{ group.name | slugify }}">
+          <h3>{{ mode_label }}</h3>
+          <ul class="fw-development-list">
+            {% assign group_year_groups = group.items | group_by: "year" | sort: "name" | reverse %}
+            {% for year_group in group_year_groups %}
+              {% assign group_items = year_group.items | sort: "title" %}
+              {% for item in group_items %}
+                <li class="fw-development-record">{% assign title_clean = item.title | default: "" | strip %}{% assign title_last = title_clean | slice: -1 %}{{ title_clean }}{% unless title_last == "." or title_last == "!" or title_last == "?" %}.{% endunless %}{% if item.place or item.organization or item.year %} -- {% endif %}{% if item.place %}{{ item.place | strip }}{% if item.organization %} : {% elsif item.year %}, {% endif %}{% endif %}{% if item.organization %}{{ item.organization | strip }}{% if item.year %}, {% endif %}{% endif %}{% if item.year %}{{ item.year }}{% endif %}{% if item.place or item.organization or item.year %}.{% endif %}{% if item.description %}
+                  <div class="fw-development-description">{{ item.description }}</div>{% endif %}{% if item.url %}
+                  <div class="fw-development-link"><a href="{{ item.url }}">Learn more</a></div>{% endif %}
+                </li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </section>
+      {% endunless %}
+    {% endfor %}
+  </section>
+{% endif %}

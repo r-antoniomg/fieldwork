@@ -1,0 +1,56 @@
+{% comment %}
+  Fieldwork single field note image include
+
+  Purpose:
+  - Reads shared image/object records from _data/practice_objects.yml
+  - Finds one record by stable id
+  - Displays the image and title only
+  - Preserves original image ratio and orientation
+  - Supports optional semantic display settings:
+      size="small" | "medium" | "large"
+      align="left" | "center" | "right"
+
+  Basic use:
+  {% include practice-fieldnote-image.html id="fn-collage-001" %}
+
+  With optional display settings:
+  {% include practice-fieldnote-image.html id="fn-collage-001" size="medium" align="center" %}
+
+  Notes:
+  - If size is omitted, no size modifier class is added. The image displays at natural size, constrained only by max-width: 100% in CSS.
+  - If align is omitted, the include defaults to center alignment.
+  - CSS should define the size and alignment classes used below.
+{% endcomment %}
+
+{% assign image_id = include.id %}
+{% assign image_size = include.size | default: "original" %}
+{% assign image_align = include.align | default: "center" %}
+
+{% assign fieldnote_image = site.data.practice_objects | where: "id", image_id | first %}
+
+{% if fieldnote_image %}
+
+<figure class="fw-fieldnote-image fw-fieldnote-image--{{ image_align }}{% unless image_size == 'original' %} fw-fieldnote-image--{{ image_size }}{% endunless %}">
+
+  {% if fieldnote_image.image_path %}
+    <img
+      class="fw-fieldnote-image-media"
+      src="{{ fieldnote_image.image_path | relative_url }}"
+      alt="{% if fieldnote_image.title %}{{ fieldnote_image.title | escape }}{% else %}Field note image{% endif %}">
+  {% endif %}
+
+  {% if fieldnote_image.title %}
+    <figcaption class="fw-fieldnote-image-caption">
+      {{ fieldnote_image.title }}
+    </figcaption>
+  {% endif %}
+
+</figure>
+
+{% else %}
+
+<p class="fw-fieldnote-image-missing fw-metadata">
+  Image record not found{% if image_id %}: {{ image_id }}{% endif %}.
+</p>
+
+{% endif %}

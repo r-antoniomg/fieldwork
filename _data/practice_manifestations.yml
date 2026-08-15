@@ -1,0 +1,29 @@
+- id: inquiry
+  title: inquiry
+  permalink: /inquiry/
+  logo: /assets/images/fieldwork-logo-wb.jpg
+  description: 'questions, experiments, exploration'
+
+- id: making
+  title: making
+  permalink: /making/
+  logo: /assets/images/fieldwork-logo-wb.jpg
+  description: 'creative practice'
+
+- id: movement
+  title: movement
+  permalink: /movement/
+  logo: /assets/images/fieldwork-logo-wb.jpg
+  description: 'embodied practice'
+
+- id: sandbox
+  title: sandbox
+  permalink: /sandbox/
+  logo: /assets/images/fieldwork-logo-wb.jpg
+  description: 'who knows what comes next...'
+
+- id: reflection
+  title: reflection
+  permalink: /reflection/
+  logo: /assets/images/fieldwork-logo-wb.jpg
+  description: 'field notes and synthesis'

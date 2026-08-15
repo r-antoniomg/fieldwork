@@ -1,0 +1,183 @@
+{% comment %}
+  Fieldwork generic generated tag view
+
+  Purpose:
+  - Provides one reusable generated-view display for any tag.
+  - Reads the tag value from the URL query string, e.g. /tag-view/?tag=Collage
+  - Falls back to page.tag if present, so existing test pages can still work temporarily.
+  - Reads object records from _data/practice_objects.yml.
+  - Automatically detects related Field Note posts from _posts, rather than relying on _data/practice_fieldnotes_pages.yml.
+
+  Expected use in a page:
+  {% include practice-generated-tag-view.html %}
+
+  Recommended generic URL pattern:
+  /tag-view/?tag=Collage
+  /tag-view/?tag=Metadata
+  /tag-view/?tag=Visual%20Journals
+{% endcomment %}
+
+<section class="fw-generated-tag-view" data-fallback-tag="{{ page.tag | default: '' | escape }}">
+
+  <div class="fw-generated-tag-view-intro">
+    <p id="fw-generated-tag-view-description"></p>
+
+    <div id="fw-generated-tag-view-fieldnotes-link" class="fw-generated-view-fieldnotes-link" hidden></div>
+  </div>
+
+  <h2 id="fw-generated-tag-view-gallery-heading" class="fw-generated-tag-view-gallery-heading"></h2>
+
+  <div id="fw-generated-tag-view-gallery" class="fw-generated-view-gallery"></div>
+
+  <p id="fw-generated-tag-view-empty" class="fw-generated-view-empty" hidden>
+    No objects have been added for this tag yet.
+  </p>
+
+  <nav class="fw-generated-view-navigation" aria-label="Generated view navigation">
+    <p class="fw-generated-view-back-link">
+      <a href="#" onclick="history.back(); return false;">
+        ← Return to previous page
+      </a>
+    </p>
+  </nav>
+
+</section>
+
+<script>
+(function () {
+  const objectItems = {{ site.data.practice_objects | jsonify }};
+
+  const fieldnotePosts = [
+    {% assign first_fieldnote_post = true %}
+    {% for post in site.posts %}
+      {% if post.type == "fieldnote" or post.fieldwork_type == "fieldnote" %}
+        {% unless first_fieldnote_post %},{% endunless %}
+        {
+          "title": {{ post.title | jsonify }},
+          "url": {{ post.url | relative_url | jsonify }},
+          "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
+          "tags": {{ post.tags | jsonify }}
+        }
+        {% assign first_fieldnote_post = false %}
+      {% endif %}
+    {% endfor %}
+  ];
+
+  const root = document.querySelector('.fw-generated-tag-view');
+  const fallbackTag = root ? root.getAttribute('data-fallback-tag') : '';
+
+  const params = new URLSearchParams(window.location.search);
+  const requestedTag = (params.get('tag') || fallbackTag || '').trim();
+
+  const descriptionEl = document.getElementById('fw-generated-tag-view-description');
+  const fieldnotesLinkEl = document.getElementById('fw-generated-tag-view-fieldnotes-link');
+  const headingEl = document.getElementById('fw-generated-tag-view-gallery-heading');
+  const galleryEl = document.getElementById('fw-generated-tag-view-gallery');
+  const emptyEl = document.getElementById('fw-generated-tag-view-empty');
+
+  function normalize(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function includesTag(record, tag) {
+    if (!record || !record.tags || !tag) return false;
+
+    if (Array.isArray(record.tags)) {
+      return record.tags.some(function (recordTag) {
+        return normalize(recordTag) === normalize(tag);
+      });
+    }
+
+    return normalize(record.tags) === normalize(tag);
+  }
+
+  function matchingFieldnotePosts(tag) {
+    if (!Array.isArray(fieldnotePosts) || !tag) return [];
+
+    return fieldnotePosts.filter(function (post) {
+      return includesTag(post, tag);
+    });
+  }
+
+  function createImageCard(record) {
+    const figure = document.createElement('figure');
+    figure.className = 'fw-generated-view-item';
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'fw-generated-view-image-wrapper';
+
+    if (record.image_path) {
+      const img = document.createElement('img');
+      img.className = 'fw-generated-view-image';
+      img.src = record.image_path;
+      img.alt = record.title || 'Fieldwork object image';
+      wrapper.appendChild(img);
+    }
+
+    figure.appendChild(wrapper);
+
+    if (record.title) {
+      const caption = document.createElement('figcaption');
+      caption.className = 'fw-generated-view-caption';
+      caption.textContent = record.title;
+      figure.appendChild(caption);
+    }
+
+    return figure;
+  }
+
+  if (!requestedTag) {
+    if (descriptionEl) {
+      descriptionEl.textContent = 'No tag was provided for this generated view.';
+    }
+    if (headingEl) {
+      headingEl.textContent = 'Generated view';
+    }
+    if (emptyEl) {
+      emptyEl.hidden = false;
+    }
+    return;
+  }
+
+  if (descriptionEl) {
+    descriptionEl.textContent = `This is an auto-generated view of objects tagged as ${requestedTag}.`;
+  }
+
+  if (headingEl) {
+    headingEl.textContent = `${requestedTag} gallery`;
+  }
+
+  const relatedFieldnotePosts = matchingFieldnotePosts(requestedTag);
+
+  if (relatedFieldnotePosts.length > 0 && fieldnotesLinkEl) {
+    const paragraph = document.createElement('p');
+    paragraph.appendChild(document.createTextNode('If you want to learn more about this topic as part of Fieldwork practice, you can explore '));
+
+    const link = document.createElement('a');
+    link.href = `/fieldnotes/?tag=${encodeURIComponent(requestedTag)}`;
+    link.textContent = `${requestedTag} Field Notes`;
+
+    paragraph.appendChild(link);
+    paragraph.appendChild(document.createTextNode('.'));
+
+    fieldnotesLinkEl.appendChild(paragraph);
+    fieldnotesLinkEl.hidden = false;
+  }
+
+  const matchingItems = Array.isArray(objectItems)
+    ? objectItems.filter(function (record) { return includesTag(record, requestedTag); })
+    : [];
+
+  if (galleryEl) {
+    matchingItems.forEach(function (record) {
+      galleryEl.appendChild(createImageCard(record));
+    });
+  }
+
+  if (matchingItems.length === 0 && emptyEl) {
+    emptyEl.hidden = false;
+  }
+
+  document.title = `${requestedTag} | ${document.title}`;
+})();
+</script>

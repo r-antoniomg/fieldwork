@@ -1,0 +1,18 @@
+main:
+  - title: 'fieldwork'
+    url: /
+
+  - title: 'inquiry'
+    url: /inquiry/
+  
+  - title: 'movement'
+    url: /movement/
+  
+  - title: 'making'
+    url: /making/
+  
+  - title: 'reflection'
+    url: /reflection/
+  
+  - title: 'field notes'
+    url: /field-notes/

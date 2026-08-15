@@ -1,0 +1,69 @@
+{% comment %}
+  Fieldwork Manifestation Examples
+  Purpose:
+  - Acts as the parent include for the manifestation examples section.
+  - Renders the h2 heading "[Manifestation] in practice : projects and field notes" only when relevant content exists.
+  - Pulls from existing child includes for projects, field notes, and tag discovery.
+  - Keeps manifestation pages cleaner and more template-ready.
+
+  Content checks:
+  - Projects: records in _data/practice_projects.yml whose targets include the current manifestation.
+  - Field notes: posts with type: fieldnote whose targets include the current manifestation.
+  - Explore further: records in _data/practice_objects.yml whose targets include the current manifestation and have tags.
+
+  Include usage:
+  {% include practice-manifestation-examples.html %}
+  {% include practice-manifestation-examples.html target="inquiry" %}
+{% endcomment %}
+
+{% assign current_target = include.target | default: page.manifestation %}
+{% assign manifestation_label = include.label | default: page.title | default: current_target | capitalize %}
+
+{% assign has_projects = false %}
+{% assign has_fieldnotes = false %}
+{% assign has_explore_tags = false %}
+
+{% if current_target %}
+  {% assign project_items = site.data.practice_projects | where_exp: "item", "item.targets contains current_target" %}
+  {% assign fieldnote_items = site.posts | where: "type", "fieldnote" | where_exp: "post", "post.targets contains current_target" %}
+  {% assign object_items = site.data.practice_objects | where_exp: "item", "item.targets contains current_target" %}
+{% else %}
+  {% assign project_items = site.data.practice_projects %}
+  {% assign fieldnote_items = site.posts | where: "type", "fieldnote" %}
+  {% assign object_items = site.data.practice_objects %}
+{% endif %}
+
+{% if project_items and project_items.size > 0 %}
+  {% assign has_projects = true %}
+{% endif %}
+
+{% if fieldnote_items and fieldnote_items.size > 0 %}
+  {% assign has_fieldnotes = true %}
+{% endif %}
+
+{% if object_items and object_items.size > 0 %}
+  {% for item in object_items %}
+    {% if item.tags and item.tags.size > 0 %}
+      {% assign has_explore_tags = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if has_projects or has_fieldnotes or has_explore_tags %}
+  <section class="fw-manifestation-examples">
+    <h2 class="fw-manifestation-examples-heading">{{ manifestation_label }} in practice : projects and field notes</h2>
+
+    {% if has_projects %}
+      {% include practice-projects.html target=current_target %}
+    {% endif %}
+
+    {% if has_fieldnotes %}
+      {% include practice-fieldnotes.html target=current_target %}
+    {% endif %}
+
+    {% if has_explore_tags %}
+      {% include practice-tag-discovery.html target=current_target %}
+    {% endif %}
+  </section>
+{% endif %}

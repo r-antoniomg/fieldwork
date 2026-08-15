@@ -1,0 +1,152 @@
+{% comment %}
+  Fieldwork Field Notes Collection
+
+  Purpose:
+  - Provides one reusable collection display for Field Note posts.
+  - Reads the tag value from the URL query string, e.g. /fieldnotes/?tag=Collage
+  - Displays Field Note posts whose tags include the requested tag.
+  - Supports posts marked with either:
+      type: fieldnote
+    or:
+      fieldwork_type: fieldnote
+    during the prototype/migration period.
+
+  Expected use in fieldnotes.md:
+  {% include practice-fieldnotes-collection.html %}
+
+  Recommended URL pattern:
+  /fieldnotes/?tag=Collage
+  /fieldnotes/?tag=Metadata
+  /fieldnotes/?tag=Visual%20Journals
+{% endcomment %}
+
+<section class="fw-fieldnotes-collection" data-fallback-tag="{{ page.tag | default: '' | escape }}">
+
+  <div class="fw-fieldnotes-collection-intro">
+    <p id="fw-fieldnotes-collection-description"></p>
+  </div>
+
+  <div id="fw-fieldnotes-collection-list" class="fw-fieldnotes-collection-list"></div>
+
+  <p id="fw-fieldnotes-collection-empty" class="fw-fieldnotes-collection-empty" hidden>
+    No Field Notes have been added for this tag yet.
+  </p>
+
+  <nav class="fw-fieldnotes-collection-navigation" aria-label="Field Notes collection navigation">
+    <p class="fw-fieldnotes-collection-back-link">
+      <a href="#" onclick="history.back(); return false;">
+        ← Return to previous page
+      </a>
+    </p>
+  </nav>
+
+</section>
+
+<script>
+(function () {
+  const fieldnotePosts = [
+    {% assign first_fieldnote_post = true %}
+    {% for post in site.posts %}
+      {% if post.type == "fieldnote" or post.fieldwork_type == "fieldnote" %}
+        {% unless first_fieldnote_post %},{% endunless %}
+        {
+          "title": {{ post.title | jsonify }},
+          "url": {{ post.url | relative_url | jsonify }},
+          "date": {{ post.date | date: "%Y-%m-%d" | jsonify }},
+          "tags": {{ post.tags | jsonify }},
+          "targets": {{ post.targets | default: empty | jsonify }},
+          "excerpt": {{ post.excerpt | strip_html | normalize_whitespace | strip | jsonify }}
+        }
+        {% assign first_fieldnote_post = false %}
+      {% endif %}
+    {% endfor %}
+  ];
+
+  const root = document.querySelector('.fw-fieldnotes-collection');
+  const fallbackTag = root ? root.getAttribute('data-fallback-tag') : '';
+
+  const params = new URLSearchParams(window.location.search);
+  const requestedTag = (params.get('tag') || fallbackTag || '').trim();
+
+  const descriptionEl = document.getElementById('fw-fieldnotes-collection-description');
+  const listEl = document.getElementById('fw-fieldnotes-collection-list');
+  const emptyEl = document.getElementById('fw-fieldnotes-collection-empty');
+
+  function normalize(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function postHasTag(post, tag) {
+    if (!post || !post.tags || !tag) return false;
+
+    if (Array.isArray(post.tags)) {
+      return post.tags.some(function (postTag) {
+        return normalize(postTag) === normalize(tag);
+      });
+    }
+
+    return normalize(post.tags) === normalize(tag);
+  }
+
+  function createPostCard(post) {
+    const article = document.createElement('article');
+    article.className = 'fw-fieldnotes-collection-card';
+
+    const title = document.createElement('h2');
+    title.className = 'fw-fieldnotes-collection-card-title';
+
+    const link = document.createElement('a');
+    link.href = post.url;
+    link.textContent = post.title || 'Untitled Field Note';
+
+    title.appendChild(link);
+    article.appendChild(title);
+
+    if (post.date) {
+      const date = document.createElement('p');
+      date.className = 'fw-fieldnotes-collection-card-date fw-metadata';
+      date.textContent = post.date;
+      article.appendChild(date);
+    }
+
+    if (post.excerpt) {
+      const excerpt = document.createElement('p');
+      excerpt.className = 'fw-fieldnotes-collection-card-excerpt';
+      excerpt.textContent = post.excerpt;
+      article.appendChild(excerpt);
+    }
+
+    return article;
+  }
+
+  if (!requestedTag) {
+    if (descriptionEl) {
+      descriptionEl.textContent = 'No tag was provided for this Field Notes collection.';
+    }
+    if (emptyEl) {
+      emptyEl.hidden = false;
+    }
+    return;
+  }
+
+  if (descriptionEl) {
+    descriptionEl.textContent = `Field notes related to ${requestedTag}.`;
+  }
+
+  const matchingPosts = fieldnotePosts.filter(function (post) {
+    return postHasTag(post, requestedTag);
+  });
+
+  if (listEl) {
+    matchingPosts.forEach(function (post) {
+      listEl.appendChild(createPostCard(post));
+    });
+  }
+
+  if (matchingPosts.length === 0 && emptyEl) {
+    emptyEl.hidden = false;
+  }
+
+  document.title = `${requestedTag} Field Notes | ${document.title}`;
+})();
+</script>

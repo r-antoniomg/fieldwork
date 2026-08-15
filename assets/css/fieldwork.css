@@ -1,0 +1,1177 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
+
+/* fieldwork typography test
+   body: Charter. -- 'crafted font feel'
+   headings: Atkinson Hyperlegible. -- 'exploratory feel'
+   logistics & metadata: IBM Plex Mono. -- 'link between tradition and technology: technology fixed at a point in time'
+*/
+
+/* Default body text: Charter */
+
+body {
+  font-family: 'Source Serif 4', serif;
+}
+
+/* Hero header excerpt text */
+
+.page__hero .page__lead,
+.page__hero--overlay .page__lead {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Masthead (navbar) */
+
+.masthead .masthead__inner-wrap {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+/* Headings */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 2em 0 0.5em;
+  line-height: 1.2;
+  font-family: "Atkinson Hyperlegible", sans-serif;
+  font-weight: bold;
+}
+
+/* Structured records, metadata layer */
+
+.fw-metadata-block {
+  font-family: 'Source Serif 4', serif;
+  line-height: 1.5;
+  padding: 1rem;
+}
+
+/* Dictionary / definition-list styling */
+
+.page__content dl,
+.page__content dt,
+.page__content dd,
+.page__content dd p {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+/* Image grid for Beyond section */
+
+.fw-practice-link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.fw-practice-link-card {
+  text-align: center;
+}
+
+.fw-practice-link-card a {
+  text-decoration: none;
+}
+
+.fw-practice-link-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 0.5rem;
+}
+
+.fw-practice-link-title {
+  display: block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Fieldwork Beyond / practice-link gallery
+   Used by: _includes/practice-links-gallery.html
+
+   Purpose:
+   - Render the required "Beyond [manifestation]" section.
+   - Use a reusable logo/symbol image for each linked manifestation.
+   - Render the manifestation wordmark as live text beneath the image.
+   - Keep the section visually smaller than Projects and Field notes galleries.
+*/
+
+.fw-practice-links-section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.fw-practice-links-heading {
+  margin-bottom: 1rem;
+}
+
+.fw-practice-links-gallery {
+  max-width: 50rem;
+  margin: 1.25rem auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.fw-practice-links-gallery .fw-practice-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fw-practice-links-gallery .fw-practice-link:hover,
+.fw-practice-links-gallery .fw-practice-link:focus {
+  text-decoration: none;
+}
+
+.fw-practice-links-gallery img.fw-practice-link-image {
+  display: block;
+  width: 100%;
+  max-width: 120px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.fw-practice-link-label {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: "EB Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.1;
+  color: inherit;
+}
+
+.fw-practice-links-gallery .fw-practice-link:hover .fw-practice-link-label,
+.fw-practice-links-gallery .fw-practice-link:focus .fw-practice-link-label {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.fw-practice-links-gallery figcaption {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .fw-practice-links-gallery {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+    max-width: 24rem;
+  }
+
+  .fw-practice-links-gallery img.fw-practice-link-image {
+    max-width: 100px;
+  }
+}
+
+/* Examples (field notes and projects) gallery */
+
+.fw-project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin: 3rem 0;
+}
+
+@media (max-width: 900px) {
+  .fw-project-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .fw-project-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fw-project-card-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.fw-project-card-tags,
+.fw-fieldnote-card-tags {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.7rem !important;
+  margin-top: 0.3rem;
+  margin-bottom: 0;
+  line-height: 1.3;
+}
+.fw-project-card-title {
+  margin-bottom: 0.4rem;
+}
+
+.fw-project-card-description {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+}
+
+.fw-project-card-tags,
+.fw-fieldnote-card-tags {
+  margin-top: 0;
+}
+/* Fieldwork influence cards
+   Add this block to assets/css/fieldwork.css.
+   These styles support the text-first practice_influences include.
+*/
+
+.fw-influence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.fw-influence-card {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 1rem;
+  background: transparent;
+}
+
+.fw-influence-card-header {
+  margin-bottom: 0.85rem;
+}
+
+.fw-influence-card-title {
+  font-family: var(--fw-font-structure, "Atkinson Hyperlegible", "Roboto", "Segoe UI", "Helvetica Neue", Arial, sans-serif);
+  font-size: 1.05rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.fw-influence-card-relationship {
+  font-family: var(--fw-font-metadata, "IBM Plex Mono", "Courier New", Consolas, Monaco, monospace);
+  font-size: 0.72rem;
+  line-height: 1.35;
+  margin-top: 0.15rem;
+  text-transform: lowercase;
+}
+
+.fw-influence-card-relationship-label,
+.fw-influence-card-relationship-value {
+  font-family: inherit;
+}
+
+.fw-influence-card-description {
+  font-family: var(--fw-font-reading, Charter, "Bitstream Charter", "Charter BT", Georgia, "Times New Roman", serif);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  margin: 0 0 0.85rem 0;
+}
+
+.fw-influence-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.55rem;
+  margin-top: 0.75rem;
+}
+
+.fw-influence-card-link,
+.fw-influence-card-link:visited {
+  display: inline-block;
+  font-family: var(--fw-font-metadata, "IBM Plex Mono", "Courier New", Consolas, Monaco, monospace);
+  font-size: 0.7rem;
+  line-height: 1.2;
+  text-transform: lowercase;
+  text-decoration: none;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 999px;
+  padding: 0.22rem 0.48rem;
+  color: inherit;
+}
+
+.fw-influence-card-link:hover,
+.fw-influence-card-link:focus {
+  text-decoration: underline;
+}
+
+.fw-influence-card-link--text {
+  cursor: default;
+}
+
+/* =========================================================
+   Fieldwork Generated View Gallery
+   Version 3 - Uniform gallery boxes
+
+   Purpose:
+   - Three-column visual gallery
+   - Consistent image container size
+   - Entire image visible where possible
+   - Centered image and caption
+   ========================================================= */
+
+.fw-generated-view {
+  margin: 2rem 0;
+}
+
+.fw-generated-view-count {
+  margin-bottom: 1.5rem;
+}
+
+.fw-generated-view-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 72rem;
+  margin: 2rem auto;
+}
+
+.fw-generated-view-item {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  height: 100%;
+}
+
+.fw-generated-view-image-wrapper {
+  width: 100%;
+}
+
+.fw-generated-view-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fw-generated-view-caption {
+  display: block;
+  width: 100%;
+
+  text-align: center;
+
+  margin-top: 0.75rem;
+  padding: 0 0.5rem;
+}
+
+.fw-generated-view-empty {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+@media (max-width: 900px) {
+  .fw-generated-view-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .fw-generated-view-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .fw-generated-view-image-wrapper {
+    height: 240px;
+  }
+}
+
+/* =========================================================
+   Fieldwork Practice Tag Discovery
+   For: _includes/practice-tag-discovery.html
+   Add to: assets/css/fieldwork.css
+   ========================================================= */
+
+.fw-tag-discovery[hidden] {
+  display: none !important;
+}
+   
+.fw-tag-discovery {
+  margin: 2rem 0;
+}
+
+.fw-tag-discovery-heading {
+  margin-bottom: 1rem;
+}
+
+.fw-tag-discovery-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.75rem;
+}
+
+.fw-tag-discovery-link,
+.fw-tag-discovery-link:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #dddddd;
+  border-radius: 999px;
+
+  color: inherit;
+  text-decoration: none;
+  line-height: 1.2;
+
+  font-family: var(--fw-font-metadata, "IBM Plex Mono", "Courier New", monospace);
+  letter-spacing: 0.01em;
+
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.fw-tag-discovery-link:hover,
+.fw-tag-discovery-link:focus {
+  color: inherit;
+  text-decoration: none;
+  border-color: #999999;
+  background-color: rgba(0, 0, 0, 0.035);
+  transform: translateY(-1px);
+}
+
+.fw-tag-discovery-link--small {
+  font-size: 0.85rem;
+}
+
+.fw-tag-discovery-link--medium {
+  font-size: 1rem;
+  padding: 0.4rem 0.85rem;
+}
+
+.fw-tag-discovery-link--large {
+  font-size: 1.15rem;
+  padding: 0.45rem 1rem;
+  border-width: 1.5px;
+}
+
+.fw-tag-discovery-empty {
+  margin: 1rem 0;
+}
+
+@media (max-width: 640px) {
+  .fw-tag-discovery-list {
+    gap: 0.55rem;
+  }
+
+  .fw-tag-discovery-link--small,
+  .fw-tag-discovery-link--medium,
+  .fw-tag-discovery-link--large {
+    font-size: 0.9rem;
+    padding: 0.35rem 0.75rem;
+  }
+}
+
+/* =========================================================
+   Fieldwork Single Image Display
+   For: practice-fieldnote-image.html
+   Add to assets/css/fieldwork.css
+   ========================================================= */
+
+.fw-fieldnote-image {
+  display: block;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.fw-fieldnote-image-media {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+/* Alignment */
+
+.fw-fieldnote-image--center .fw-fieldnote-image-media {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fw-fieldnote-image--left .fw-fieldnote-image-media {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.fw-fieldnote-image--right .fw-fieldnote-image-media {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Caption alignment follows image alignment */
+
+.fw-fieldnote-image--center .fw-fieldnote-image-caption {
+  text-align: center;
+}
+
+.fw-fieldnote-image--left .fw-fieldnote-image-caption {
+  text-align: left;
+}
+
+.fw-fieldnote-image--right .fw-fieldnote-image-caption {
+  text-align: right;
+}
+
+/* Sizes */
+
+.fw-fieldnote-image--small .fw-fieldnote-image-media {
+  max-width: 350px;
+}
+
+.fw-fieldnote-image--medium .fw-fieldnote-image-media {
+  max-width: 500px;
+}
+
+.fw-fieldnote-image--large .fw-fieldnote-image-media {
+  max-width: 850px;
+}
+
+/* Caption */
+
+.fw-fieldnote-image-caption {
+  margin-top: 0.5rem;
+}
+
+/* Missing image message */
+
+.fw-fieldnote-image-missing {
+  margin: 1rem 0;
+}
+
+/* =========================================================
+   Fieldwork Field Note Gallery
+   For: practice-fieldnote-gallery.html
+   ========================================================= */
+
+.fw-fieldnote-gallery {
+  margin: 2rem 0;
+}
+
+.fw-fieldnote-gallery--2col,
+.fw-fieldnote-gallery--3col {
+  align-items: center;
+}
+
+/* 1-4 images */
+.fw-fieldnote-gallery--2col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+/* 5+ images */
+.fw-fieldnote-gallery--3col {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.fw-fieldnote-gallery-item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.fw-fieldnote-gallery-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fw-fieldnote-gallery-caption {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+  .fw-fieldnote-gallery--2col,
+  .fw-fieldnote-gallery--3col {
+    grid-template-columns: 1fr;
+  }
+
+  .fw-fieldnote-gallery-image {
+    height: auto;
+    object-fit: cover;
+  }
+}
+
+/* =========================================================
+   Fieldwork Field Note Navigation
+   Add to assets/css/fieldwork.css
+
+   Requires _includes/practice-fieldnote-navigation.html to use:
+   <nav class="fw-fieldnote-navigation"> ... </nav>
+   ========================================================= */
+
+.page__date + .fw-fieldnote-navigation,
+.fw-fieldnote-navigation {
+  display: block;
+  clear: both;
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dddddd;
+}
+
+.fw-fieldnote-navigation-back {
+  margin: 0;
+}
+
+.fw-fieldnote-navigation-back a {
+  text-decoration: none;
+}
+
+.fw-fieldnote-navigation-back a:hover,
+.fw-fieldnote-navigation-back a:focus {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   Fieldwork Practice Manifestation Cards
+   For: _includes/practice-manifestation-cards.html
+   Add to: assets/css/fieldwork.css
+   ========================================================= */
+
+.fw-manifestation-gallery {
+  display: grid;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.fw-manifestation-card,
+.fw-manifestation-card:visited,
+.fw-manifestation-card:hover,
+.fw-manifestation-card:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+.fw-manifestation-card-title,
+.fw-manifestation-card-description {
+  color: inherit;
+  text-decoration: none;
+}
+
+.fw-manifestation-card:hover .fw-manifestation-card-title,
+.fw-manifestation-card:hover .fw-manifestation-card-description,
+.fw-manifestation-card:focus .fw-manifestation-card-title,
+.fw-manifestation-card:focus .fw-manifestation-card-description {
+  text-decoration: none;
+}
+
+/* 1-4 displayed manifestation cards */
+.fw-manifestation-gallery--2col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* 5+ displayed manifestation cards */
+.fw-manifestation-gallery--3col {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fw-manifestation-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem;
+  max-width: 260px;
+  margin: 0 auto;
+  aspect-ratio: 2 / 3;
+
+  text-align: center;
+  text-decoration: none;
+
+  border: 1px solid #dddddd;
+  border-radius: 0.25rem;
+}
+
+.fw-manifestation-card-title::after {
+  content: "";
+  display: block;
+
+  width: 45%;
+  margin: 0.6rem auto 0.8rem auto;
+
+  border-top: 1px solid #cccccc;
+}
+
+.fw-manifestation-card:hover,
+.fw-manifestation-card:focus {
+  text-decoration: none;
+}
+
+.fw-manifestation-card-image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.fw-manifestation-card-image {
+  display: block;
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+}
+
+.fw-manifestation-card-content {
+  width: 100%;
+}
+
+.fw-manifestation-card-title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+
+  font-family: var(--fw-font-logo, "EB Garamond", serif);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.fw-manifestation-card-description {
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .fw-manifestation-gallery--3col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .fw-manifestation-gallery--2col,
+  .fw-manifestation-gallery--3col {
+    grid-template-columns: 1fr;
+  }
+
+  .fw-manifestation-card-image {
+    max-width: 150px;
+  }
+}
+
+/* Field note cards
+   Used by: _includes/practice-fieldnotes.html
+   Purpose: text-based card gallery for field notes on manifestation pages.
+*/
+
+.fw-fieldnotes-section {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.fw-fieldnotes-heading {
+  margin-bottom: 1rem;
+}
+
+.fw-fieldnote-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  max-width: 56rem;
+}
+
+.fw-fieldnote-card {
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 0.75rem;
+  background: #fff;
+  min-height: 11rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.fw-fieldnote-card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.fw-fieldnote-card-title {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  font-family: "Atkinson Hyperlegible", var(--global-font-family, sans-serif);
+  font-style: normal;
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.fw-fieldnote-card-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.fw-fieldnote-card-title-link:hover,
+.fw-fieldnote-card-title-link:focus {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.fw-fieldnote-card-date {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.68);
+}
+
+.fw-fieldnote-card-excerpt {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.fw-fieldnote-tag {
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .fw-fieldnote-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 38rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .fw-fieldnote-grid {
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+}
+
+/* ========================================================================== 
+   Fieldwork randomized 404 object gallery
+   Used by: _includes/practice-404-gallery.html
+   ========================================================================== */
+
+.fw-404-object-gallery {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  margin: 2rem 0;
+  transform: translateX(-50%);
+  overflow: hidden;
+  background: #f2f2f2;
+}
+
+.fw-404-object-gallery-track {
+  display: flex;
+  width: 100%;
+  height: clamp(120px, 15vw, 160px);
+  overflow: hidden;
+}
+
+.fw-404-object-gallery-item {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.fw-404-object-gallery-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.fw-404-object-gallery-noscript {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .fw-404-object-gallery-track {
+    height: 120px;
+  }
+
+  .fw-404-object-gallery-item:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+/* ========================================================================== 
+   Fieldwork minimal masthead
+   Used by: _includes/fieldwork-masthead.html
+
+   The outer .masthead and .masthead__inner-wrap classes intentionally reuse
+   Minimal Mistakes' existing masthead structure so the established vertical
+   spacing and divider treatment remain in place.
+   ========================================================================== */
+
+.fw-masthead .masthead__inner-wrap {
+  font-family: "Source Serif 4", serif;
+}
+
+.fw-masthead__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+}
+
+.fw-masthead__brand,
+.fw-masthead__brand:visited,
+.fw-masthead__brand:hover,
+.fw-masthead__brand:focus {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.fw-masthead__logo {
+  display: block;
+  width: auto;
+  height: 2rem;
+  margin: 0 0.55rem 0 0;
+  flex: 0 0 auto;
+}
+
+.fw-masthead__wordmark {
+  display: block;
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.fw-masthead__home,
+.fw-masthead__home:visited {
+  flex: 0 0 auto;
+  margin-left: 1rem;
+  color: inherit;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.fw-masthead__home:hover,
+.fw-masthead__home:focus {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+@media (max-width: 480px) {
+  .fw-masthead__logo {
+    height: 2rem;
+    margin-right: 0.45rem;
+  }
+
+  .fw-masthead__wordmark {
+    font-size: 1.25rem;
+  }
+
+  .fw-masthead__home {
+    font-size: 1rem;
+  }
+}
+
+/* ==========================================================================
+   Homepage branding block
+   ========================================================================== */
+
+.fw-home-branding {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 1rem 0 3rem 0;
+  padding-top: 1.5rem;
+}
+
+.fw-home-branding-logo {
+  width: auto;
+  height: 8rem;
+  flex: 0 0 auto;
+}
+
+.fw-home-branding-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fw-home-branding-wordmark {
+  font-family: "EB Garamond", serif;
+  font-style: italic;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 1;
+}
+  
+.fw-home-branding-tagline {
+  font-family: "Source Serif 4", serif;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  line-height: 1.2;
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 700px) {
+  .fw-home-branding-logo {
+    height: 8rem;
+  }
+}
+
+/* ==========================================================================
+   Page footer
+   ========================================================================== */
+
+.page__footer {
+  background-color: #CA93D6;
+}
+
+.page__footer,
+.page__footer a {
+  color: #000000;
+}
+
+/* ========================================================================== 
+   Behind Fieldwork homepage navigation
+   Used by: _includes/practice-behind-fieldwork.html
+   ========================================================================== */
+
+.fw-behind-fieldwork {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 0 0 1.25rem;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.fw-behind-fieldwork__details {
+  position: relative;
+  z-index: 10;
+  font-size: 0.82rem;
+}
+
+.fw-behind-fieldwork__summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.3rem 0;
+  color: inherit;
+  font-family: inherit;
+  font-weight: 400;
+  line-height: 1.2;
+  user-select: none;
+}
+
+.fw-behind-fieldwork__summary::-webkit-details-marker {
+  display: none;
+}
+
+.fw-behind-fieldwork__summary::after {
+  content: " +";
+  display: inline-block;
+  margin-left: 0.25rem;
+}
+
+.fw-behind-fieldwork__details[open] .fw-behind-fieldwork__summary::after {
+  content: " -";
+}
+
+.fw-behind-fieldwork__summary:hover,
+.fw-behind-fieldwork__summary:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.fw-behind-fieldwork__summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0.2rem;
+}
+
+.fw-behind-fieldwork__list {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  width: max-content;
+  min-width: 15rem;
+  max-width: min(22rem, calc(100vw - 2rem));
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  list-style: none;
+  text-align: right;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.fw-behind-fieldwork__item {
+  margin: 0;
+  padding: 0.45rem 0;
+}
+
+.fw-behind-fieldwork__item + .fw-behind-fieldwork__item {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.fw-behind-fieldwork__link,
+.fw-behind-fieldwork__link:visited {
+  display: block;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.fw-behind-fieldwork__link:hover,
+.fw-behind-fieldwork__link:focus {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.fw-behind-fieldwork__description {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.35;
+  opacity: 0.78;
+}
+
+@media (max-width: 560px) {
+  .fw-behind-fieldwork {
+    margin-bottom: 1rem;
+  }
+
+  .fw-behind-fieldwork__list {
+    min-width: 13rem;
+  }
+}

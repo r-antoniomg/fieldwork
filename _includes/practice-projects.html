@@ -1,0 +1,74 @@
+{% comment %}
+  Fieldwork Practice Projects
+  Purpose:
+  - Generates a conditional project card gallery for manifestation pages.
+  - Reads the current manifestation from include.target or page.manifestation.
+  - Selects project records whose targets include the current manifestation.
+  - Renders the h3 heading "Projects" only when matching projects exist.
+  - Renders nothing visible when no matching projects exist.
+
+  Include usage:
+  {% include practice-projects.html %}
+  {% include practice-projects.html target="inquiry" %}
+{% endcomment %}
+
+{% assign current_target = include.target | default: page.manifestation %}
+
+{% if current_target %}
+  {% assign project_items = site.data.practice_projects | where_exp: "item", "item.targets contains current_target" %}
+{% else %}
+  {% assign project_items = site.data.practice_projects %}
+{% endif %}
+
+{% if project_items and project_items.size > 0 %}
+  <section class="fw-projects-section">
+    <h3 class="fw-projects-heading">Projects</h3>
+
+    <div class="fw-project-grid">
+      {% for item in project_items %}
+        <article class="fw-project-card">
+          {% if item.url %}
+            <a class="fw-project-card-link" href="{{ item.url }}">
+          {% endif %}
+
+          {% if item.image_path %}
+            <img
+              class="fw-project-card-image"
+              src="{{ item.image_path | relative_url }}"
+              alt="{{ item.title | escape }}">
+          {% endif %}
+
+          {% if item.url %}
+            </a>
+          {% endif %}
+
+          <div class="fw-project-card-body">
+            {% if item.title %}
+              <h3 class="fw-project-card-title">
+                {% if item.url %}
+                  <a href="{{ item.url }}">{{ item.title }}</a>
+                {% else %}
+                  {{ item.title }}
+                {% endif %}
+              </h3>
+            {% endif %}
+
+            {% if item.description %}
+              <p class="fw-project-card-description">
+                {{ item.description }}
+              </p>
+            {% endif %}
+
+            {% if item.tags and item.tags.size > 0 %}
+              <p class="fw-project-card-tags">
+                {% for tag in item.tags %}
+                  <span class="fw-project-tag">{{ tag }}</span>{% unless forloop.last %} &middot; {% endunless %}
+                {% endfor %}
+              </p>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

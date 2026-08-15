@@ -1,0 +1,70 @@
+{% comment %}
+  Fieldwork "Behind Fieldwork" navigation
+
+  Purpose:
+  - Reads navigation records from _data/practice_behind_fieldwork.yml.
+  - Finds the corresponding destination page in site.pages by URL.
+  - Renders a destination only when the page exists and its front matter
+    contains active: true.
+  - Renders nothing when no eligible destination pages exist.
+  - Uses a native details/summary disclosure for keyboard-accessible behavior
+    without JavaScript.
+
+  Expected YAML fields:
+  - title
+  - url
+  - description (optional)
+
+  Expected destination-page front matter:
+  active: true
+  permalink: /example/
+
+  Usage:
+  {% include practice-behind-fieldwork.html %}
+{% endcomment %}
+
+{% assign active_page_count = 0 %}
+
+{% for item in site.data.practice_behind_fieldwork %}
+  {% assign destination_page = site.pages | where: "url", item.url | first %}
+
+  {% if destination_page and destination_page.active %}
+    {% assign active_page_count = active_page_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if active_page_count > 0 %}
+  <nav class="fw-behind-fieldwork" aria-label="Behind Fieldwork navigation">
+    <details class="fw-behind-fieldwork__details">
+      <summary class="fw-behind-fieldwork__summary">
+        Behind fieldwork
+      </summary>
+
+      <ul class="fw-behind-fieldwork__list">
+        {% for item in site.data.practice_behind_fieldwork %}
+          {% assign destination_page = site.pages | where: "url", item.url | first %}
+
+          {% if destination_page and destination_page.active %}
+            {% assign destination_url = destination_page.url | default: item.url %}
+            {% assign destination_title = item.title | default: destination_page.title %}
+
+            <li class="fw-behind-fieldwork__item">
+              <a
+                class="fw-behind-fieldwork__link"
+                href="{{ destination_url | relative_url }}"
+                {% if item.description %}title="{{ item.description | escape_once }}"{% endif %}>
+                {{ destination_title | escape_once }}
+              </a>
+
+              {% if item.description %}
+                <span class="fw-behind-fieldwork__description">
+                  {{ item.description }}
+                </span>
+              {% endif %}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </details>
+  </nav>
+{% endif %}

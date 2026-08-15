@@ -1,0 +1,70 @@
+{% comment %}
+  Fieldwork Practice Field Notes
+  Purpose:
+  - Generates a conditional field note card gallery for manifestation pages.
+  - Reads the current manifestation from include.target or page.manifestation.
+  - Selects posts with type: fieldnote whose targets include the current manifestation.
+  - Sorts matching field notes newest to oldest.
+  - Displays a maximum of 6 field notes by default.
+  - Renders the h3 heading "Field notes" only when matching field notes exist.
+  - Renders nothing visible when no matching field notes exist.
+
+  Include usage:
+  {% include practice-fieldnotes.html %}
+  {% include practice-fieldnotes.html target="inquiry" %}
+  {% include practice-fieldnotes.html limit=4 %}
+{% endcomment %}
+
+{% assign current_target = include.target | default: page.manifestation %}
+{% assign fieldnote_limit = include.limit | default: 6 %}
+
+{% if current_target %}
+  {% assign fieldnote_items = site.posts | where: "type", "fieldnote" | where_exp: "post", "post.targets contains current_target" | sort: "date" | reverse %}
+{% else %}
+  {% assign fieldnote_items = site.posts | where: "type", "fieldnote" | sort: "date" | reverse %}
+{% endif %}
+
+{% if fieldnote_items and fieldnote_items.size > 0 %}
+  <section class="fw-fieldnotes-section">
+    <h3 class="fw-fieldnotes-heading">Field notes</h3>
+
+    <div class="fw-fieldnote-grid">
+      {% for post in fieldnote_items limit: fieldnote_limit %}
+        <article class="fw-fieldnote-card">
+          <div class="fw-fieldnote-card-body">
+            {% if post.title %}
+              <h4 class="fw-fieldnote-card-title">
+                <a class="fw-fieldnote-card-title-link" href="{{ post.url | relative_url }}">
+                  {{ post.title }}
+                </a>
+              </h4>
+            {% endif %}
+
+            {% if post.date %}
+              <p class="fw-fieldnote-card-date">
+                <time datetime="{{ post.date | date_to_xmlschema }}">
+                  {{ post.date | date: "%Y-%m-%d" }}
+                </time>
+              </p>
+            {% endif %}
+
+            {% assign card_excerpt = post.fieldnote_excerpt | default: post.summary | default: post.description %}
+            {% if card_excerpt %}
+              <p class="fw-fieldnote-card-excerpt">
+                {{ card_excerpt | strip_html | truncate: 180 }}
+              </p>
+            {% endif %}
+
+            {% if post.tags and post.tags.size > 0 %}
+              <p class="fw-fieldnote-card-tags">
+                {% for tag in post.tags %}
+                  <span class="fw-fieldnote-tag">{{ tag }}</span>{% unless forloop.last %} &middot; {% endunless %}
+                {% endfor %}
+              </p>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

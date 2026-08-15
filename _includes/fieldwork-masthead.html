@@ -1,0 +1,35 @@
+{% comment %}
+  Fieldwork minimal masthead
+
+  Purpose:
+  - Provides a quiet branded header for interior pages.
+  - Reuses Minimal Mistakes masthead wrapper classes to preserve the theme's
+    established height, spacing, border, and responsive behaviour.
+  - Displays only the Fieldwork symbol, the rendered Fieldwork wordmark,
+    and a Home link.
+
+  Intended usage in _layouts/default.html:
+
+  {% unless page.url == '/' %}
+    {% include fieldwork-masthead.html %}
+  {% endunless %}
+{% endcomment %}
+
+<div class="masthead fw-masthead">
+  <div class="masthead__inner-wrap">
+    <nav class="fw-masthead__nav" aria-label="Fieldwork navigation">
+      <a
+        class="fw-masthead__brand"
+        href="{{ '/' | relative_url }}"
+        aria-label="Fieldwork home">
+        <img
+          class="fw-masthead__logo"
+          src="{{ '/assets/images/fieldwork-main.png' | relative_url }}"
+          alt="">
+        <span class="fw-masthead__wordmark">fieldwork</span>
+      </a>
+
+      <a class="fw-masthead__home" href="{{ '/' | relative_url }}">Home</a>
+    </nav>
+  </div>
+</div>

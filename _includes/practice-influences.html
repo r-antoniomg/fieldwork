@@ -1,0 +1,114 @@
+{% comment %}
+  Fieldwork practice influences include
+  Purpose:
+  - Reads shared records from _data/practice_influences.yml
+  - Filters records by page.manifestation or an explicitly passed include.target
+  - Renders a conditional Influences section only when matching influence records exist
+  - Displays a small featured subset of matching influence cards
+  - Provides a link to the generated influences view for the current manifestation
+
+  Current launch behaviour:
+  - Displays the first 3 matching influence records, preserving YAML order
+  - Does not yet use displayCode for rotation or selection
+  - If no matching influence records exist, this include renders nothing visible
+
+  Expected minimum YAML fields:
+  - label
+  - relationship
+  - description
+  - targets
+
+  Common optional fields:
+  - personalName
+  - corporateName
+  - url
+  - social
+  - uri
+  - displayCode
+
+  Include usage:
+  {% include practice-influences.html %}
+  {% include practice-influences.html target="inquiry" %}
+  {% include practice-influences.html limit=3 %}
+{% endcomment %}
+
+{% assign current_target = include.target | default: page.manifestation %}
+{% assign influence_limit = include.limit | default: 3 %}
+{% assign manifestation_label = include.label | default: page.title | default: current_target | capitalize %}
+
+{% if current_target %}
+  {% assign influence_items = site.data.practice_influences | where_exp: "item", "item.targets contains current_target" %}
+{% else %}
+  {% assign influence_items = site.data.practice_influences %}
+{% endif %}
+
+{% if influence_items and influence_items.size > 0 %}
+  <section class="fw-influences-section">
+    <h2 class="fw-influences-heading">Influences</h2>
+
+    <p class="fw-influences-featured-label">Currently featured:</p>
+
+    <div class="fw-influence-grid">
+      {% for item in influence_items limit: influence_limit %}
+        <article class="fw-influence-card">
+          <header class="fw-influence-card-header">
+            {% if item.label %}
+              <h3 class="fw-influence-card-title">{{ item.label }}</h3>
+            {% endif %}
+
+            {% if item.relationship %}
+              <div class="fw-influence-card-relationship">
+                <span class="fw-influence-card-relationship-label">influence type:</span>
+                <span class="fw-influence-card-relationship-value">{{ item.relationship | replace: "-", " " }}</span>
+              </div>
+            {% endif %}
+          </header>
+
+          {% if item.description %}
+            <p class="fw-influence-card-description">{{ item.description }}</p>
+          {% endif %}
+
+          {% if item.url or item.social or item.uri %}
+            <div class="fw-influence-card-links">
+              {% if item.url %}
+                <a class="fw-influence-card-link" href="{{ item.url }}">website</a>
+              {% endif %}
+
+              {% if item.social %}
+                {% for social_item in item.social %}
+                  {% assign platform = social_item[0] %}
+                  {% assign social_data = social_item[1] %}
+                  {% if social_data.url %}
+                    <a class="fw-influence-card-link" href="{{ social_data.url }}">
+                      {{ platform | downcase }}
+                    </a>
+                  {% elsif social_data.handle %}
+                    <span class="fw-influence-card-link fw-influence-card-link--text">
+                      {{ platform | downcase }}
+                    </span>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+              {% if item.uri %}
+                <a class="fw-influence-card-link" href="{{ item.uri }}">authority record</a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+
+    <p class="fw-influences-view-all">
+      {% if current_target %}
+        <a href="{{ '/influences-view/' | relative_url }}?target={{ current_target | url_encode }}">
+          See a full list of {{ manifestation_label | downcase }} influences
+        </a>
+      {% else %}
+        <a href="{{ '/influences-view/' | relative_url }}">
+          See a full list of Fieldwork influences
+        </a>
+      {% endif %}
+    </p>
+  </section>
+{% endif %}

@@ -1,0 +1,120 @@
+- label: Lo Koehler
+  personalName: Lo Koehler
+  corporateName: Affect Method Collective
+  relationship: teacher; inspiration
+  description: 'Lo Koehler is a movement instructor and the creator of the Affect Method™ for barre, mat Pilates, and reformer Pilates.'
+  url: https://www.affectmethodcollective.com/
+  social:
+    instagram:
+      handle: affectmethodcollective
+      url: https://www.instagram.com/affectmethodcollective
+  targets:
+    - movement
+  displayCode: 07-08-11-07-22
+- label: Lisa
+  personalName: Lisa
+  relationship: inspiration
+  description: 'Canadian content creator on Canadian politics and current events.'
+  social:
+    tiktok:
+      handle: lisab0923
+      url: https://www.tiktok.com/@lisab0923
+  targets:
+    - reflection
+  displayCode: 04-05-07-06-13
+- label: 'Dr. Chuck'
+  personalName: 'Charles R. Severance'
+  relationship: teacher
+  description: 'Instructor/creator of the Python for everybody specialization on Coursera.'
+  url: https://www.dr-chuck.com/
+  targets:
+    - inquiry
+  displayCode: 02-09-11-20-26
+- label: 'Chris Paul Rainbows'
+  personalName: 'Chris Paul Rainbows'
+  relationship: inspiration
+  description: 'Canadian content creator on queer and trans rights and social justice.'
+  social:
+    tiktok:
+      handle: chrispaulrainbows
+      url: https://www.tiktok.com/@chrispaulrainbows
+  targets:
+    - reflection
+  displayCode: 06-07-10-12-13
+- label: 'Michael Rose'
+  personalName: 'Michael Rose'
+  relationship: inspiration
+  description: 'Designer who created the Minimal Mistakes Jekyll theme, on which this website is built with customizations.'
+  url: https://mademistakes.com/
+  social:
+    github:
+      handle: mmistakes
+      url: https://github.com/mmistakes
+    instagram:
+      handle: mmistakes
+      url: https://www.instagram.com/mmistakes/
+  targets:
+    - inquiry
+  displayCode: 02-05-12-08-30
+- label: 'Ayesha Nobes'
+  personalName: 'Ayesha Nobes'
+  corporateName: 'HealthyHips®'
+  relationship: teacher; inspiration
+  description: "Movement instructor and creator of a thorough and thoughtful 20 h yoga anatomy course."
+  url: https://www.healthyhips.ca/
+  social: 
+    instagram:
+      handle: 'healthyhips.ca'
+      url: https://www.instagram.com/healthyhips.ca
+  targets:
+    - inquiry
+    - movement
+  displayCode: 01-03-08-20-22
+- label: 'George Brown Polytechnic. Continuing Education'
+  corporateName: 'George Brown Polytechnic'
+  relationship: resource
+  description: 'A great place to learn new skills.'
+  url: https://coned.georgebrown.ca/
+  targets:
+    - inquiry
+  displayCode: 02-05-11-28-29
+- label: 'Very Short Introductions'
+  corporateName: 'Oxford University Press'
+  relationship: resource
+  description: 'A series of books on many different topics including science, arts, and humanities topics. For the most part they are a good introduction to the topic for people new to it.'
+  url: https://global.oup.com/academic/content/series/v/very-short-introductions-vsi/
+  targets:
+    - inquiry
+  displayCode: 01-05-10-19-25
+- label: 'Toronto Reference Library'
+  corporateName: 'Toronto Public Library. Reference Library.'
+  relationship: resource; inspiration
+  description: 'A wonderful public library branch, not only because of its collection, but because of the way the space is arranged.'
+  url: https://tpl.ca/
+  social:
+    instagram:
+      handle: torontolibrary
+      url: https://www.instagram.com/torontolibrary/
+    youtube:
+      handle: torontopubliclibrary
+      url: https://www.youtube.com/torontopubliclibrary
+  targets:
+    - inquiry
+    - reflection
+  displayCode: 06-10-11-15-30
+- label: Europeana
+  corporateName: Europeana
+  relationship: resource; inspiration
+  description: 'A repository of digitized media and records from across various European GLAM organizations. Contains a lot of public-domain and CC-licensed images that can be used for collage. Also interesting and impressive from the point of view of GLAM infrastructure'
+  url: https://www.europeana.eu/
+  social:
+    bluesky:
+      handle: europeana.bsky.social
+      url: https://bsky.app/profile/europeana.bsky.social
+    pinterest:
+      handle: europeana
+      url: https://www.pinterest.com/europeana/
+  targets:
+    - inquiry
+    - making
+  displayCode: 08-09-12-19-21

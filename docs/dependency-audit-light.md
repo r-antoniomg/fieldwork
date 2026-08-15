@@ -1,0 +1,8 @@
+| local page | dependency | local copy of dependency? | sub-dependencies | comments |
+|-----|-----|-----|-----|-----|
+| index.md | _layouts/splash.html | no | _layouts/default (no local copy); page__hero.html (no local copy); page_hero_video.html (no local copy) | n/a |
+| inquiry.md | _layouts/splash.html | no | _layouts/default (no local copy); page_hero.html (no local copy); page_hero_video.html (no local copy) | n/a |
+| about.md | _layouts/page.html | no | n/a | it looks like it could be a Jekyll default; about.md currently not active and was included by default on Jekyll site creation |
+| fieldnotes.md | _layouts/tag.html | no | _layouts/archive.html (no local copy); _includes/posts-tag.html (no local copy) | n/a |
+| influences-view.md | _layouts/splash.html | no | _layouts/default (no local copy); page__hero.html (no local copy); page_hero_video.html (no local copy) | n/a |
+| tag-view.md | _layouts/single.html | yes | _layouts/default (no local copy); page__hero.html (no local copy); page_hero_video.html (no local copy); _includes/breadcrumbs.html (no local copy); _includes/sidebar.html; _includes/page__meta.html (local copy); _includes/toc.html (no local copy); _includes/page__taxonomy.html (no local copy); _includes/social-share.html (no local copy, might not be needed?); _includes/post-pagination.html (no local copy); _includes/page__related.html (no local copy) | layout single has the most sub-dependencies. I didn't check the sub-dependencies for further levels of dependencies |
