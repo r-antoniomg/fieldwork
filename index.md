@@ -4,7 +4,7 @@ title: fieldwork
 date: 2026-07-15
 ---
 <div class="fw-home-branding">
-  <img class='fw-home-branding-logo' src='/assets/images/fieldwork-main.png'>
+  <img class='fw-home-branding-logo' src='fieldwork/assets/images/fieldwork-main.png'>
 
   <div class='fw-home-branding-text'>
     <div class="fw-home-branding-wordmark">
