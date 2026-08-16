@@ -1,6 +1,5 @@
 ---
 layout: single
-title: Explore tags
 permalink: /tags/
 active: true
 ---
