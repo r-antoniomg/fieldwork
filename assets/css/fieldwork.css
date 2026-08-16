@@ -1175,3 +1175,50 @@ h6 {
     min-width: 13rem;
   }
 }
+
+/* ========================================================================== 
+   Fieldwork manifestation tag discovery and full tag index
+   Used by:
+   - _includes/practice-tag-discovery.html
+   - _includes/practice-manifestation-tag-index.html
+   ========================================================================== */
+
+.fw-tag-discovery-more {
+  margin: 1rem 0 0;
+}
+
+.fw-tag-discovery-more[hidden] {
+  display: none !important;
+}
+
+.fw-tag-discovery-more-link,
+.fw-tag-discovery-more-link:visited {
+  color: inherit;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.fw-tag-discovery-more-link:hover,
+.fw-tag-discovery-more-link:focus {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.fw-manifestation-tag-index {
+  margin: 1rem 0 2rem;
+}
+
+.fw-manifestation-tag-index__intro {
+  margin-bottom: 1rem;
+}
+
+.fw-manifestation-tag-index__intro p {
+  margin-bottom: 0;
+}
+
+.fw-manifestation-tag-index__list {
+  margin: 1.5rem 0 2rem;
+}

@@ -1,0 +1,161 @@
+{% comment %}
+  Fieldwork Manifestation Tag Index
+
+  Purpose:
+  - Reads a manifestation from the URL query string, for example:
+    /tags/?manifestation=making
+  - Displays every tag used by objects targeting that manifestation.
+  - Sizes tag buttons relative to their frequency within that manifestation.
+  - Links each tag to the existing single-tag generated view.
+  - Includes a return-to-previous-page link.
+
+  Usage:
+  {% include practice-manifestation-tag-index.html %}
+{% endcomment %}
+
+<section class="fw-manifestation-tag-index">
+  <div class="fw-manifestation-tag-index__intro">
+    <p id="fw-manifestation-tag-index-description"></p>
+  </div>
+
+  <h2 id="fw-manifestation-tag-index-heading">Explore tags</h2>
+
+  <div
+    id="fw-manifestation-tag-index-list"
+    class="fw-tag-discovery-list fw-manifestation-tag-index__list"
+    aria-live="polite"></div>
+
+  <p id="fw-manifestation-tag-index-empty" class="fw-generated-view-empty" hidden>
+    No tags are available for this manifestation yet.
+  </p>
+
+  <nav class="fw-generated-view-navigation" aria-label="Tag index navigation">
+    <p class="fw-generated-view-back-link">
+      <a href="#" onclick="history.back(); return false;">
+        &larr; Return to previous page
+      </a>
+    </p>
+  </nav>
+</section>
+
+<script>
+  (function () {
+    const objectItems = {{ site.data.practice_objects | jsonify }};
+    const tagViewUrl = {{ '/tag-view/' | relative_url | jsonify }};
+    const params = new URLSearchParams(window.location.search);
+    const manifestation = (params.get('manifestation') || '').trim();
+
+    const description = document.getElementById('fw-manifestation-tag-index-description');
+    const heading = document.getElementById('fw-manifestation-tag-index-heading');
+    const list = document.getElementById('fw-manifestation-tag-index-list');
+    const empty = document.getElementById('fw-manifestation-tag-index-empty');
+
+    function normalize(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function displayLabel(value) {
+      const text = String(value || '').trim();
+      return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
+    }
+
+    function includesTarget(record, target) {
+      if (!record || !record.targets || !target) return false;
+
+      const targets = Array.isArray(record.targets)
+        ? record.targets
+        : [record.targets];
+
+      return targets.some(function (recordTarget) {
+        return normalize(recordTarget) === normalize(target);
+      });
+    }
+
+    function countTags(records) {
+      const counts = new Map();
+
+      records.forEach(function (record) {
+        const tags = Array.isArray(record.tags)
+          ? record.tags
+          : record.tags ? [record.tags] : [];
+
+        tags.forEach(function (tag) {
+          const label = String(tag || '').trim();
+          if (!label) return;
+
+          const key = normalize(label);
+          const existing = counts.get(key);
+
+          if (existing) {
+            existing.count += 1;
+          } else {
+            counts.set(key, { label: label, count: 1 });
+          }
+        });
+      });
+
+      return Array.from(counts.values()).sort(function (a, b) {
+        if (b.count !== a.count) return b.count - a.count;
+        return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' });
+      });
+    }
+
+    function sizeClass(count, minimum, maximum) {
+      if (minimum === maximum) return 'fw-tag-discovery-link--medium';
+
+      const ratio = (count - minimum) / (maximum - minimum);
+
+      if (ratio >= 0.67) return 'fw-tag-discovery-link--large';
+      if (ratio >= 0.34) return 'fw-tag-discovery-link--medium';
+      return 'fw-tag-discovery-link--small';
+    }
+
+    if (!manifestation) {
+      if (description) {
+        description.textContent = 'No manifestation was provided for this tag index.';
+      }
+      if (empty) empty.hidden = false;
+      return;
+    }
+
+    const manifestationLabel = displayLabel(manifestation);
+
+    if (heading) heading.textContent = `${manifestationLabel} tags`;
+    if (description) {
+      description.textContent = `Explore all tags associated with the ${manifestationLabel} manifestation.`;
+    }
+
+    const matchingObjects = Array.isArray(objectItems)
+      ? objectItems.filter(function (record) {
+          return includesTarget(record, manifestation);
+        })
+      : [];
+
+    const tags = countTags(matchingObjects);
+
+    if (!list || tags.length === 0) {
+      if (empty) empty.hidden = false;
+      return;
+    }
+
+    const counts = tags.map(function (tag) { return tag.count; });
+    const minimum = Math.min.apply(null, counts);
+    const maximum = Math.max.apply(null, counts);
+
+    tags.forEach(function (tag) {
+      const link = document.createElement('a');
+      link.className = [
+        'fw-tag-discovery-link',
+        'fw-tag-button',
+        sizeClass(tag.count, minimum, maximum)
+      ].join(' ');
+      link.href = `${tagViewUrl}?tag=${encodeURIComponent(tag.label)}`;
+      link.dataset.tag = tag.label;
+      link.textContent = tag.label;
+      link.setAttribute('aria-label', `${tag.label}: ${tag.count} object${tag.count === 1 ? '' : 's'}`);
+      list.appendChild(link);
+    });
+
+    document.title = `${manifestationLabel} tags | ${document.title}`;
+  }());
+</script>
