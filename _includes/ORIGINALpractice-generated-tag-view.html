@@ -4,27 +4,29 @@
   Purpose:
   - Provides one reusable generated-view display for any tag.
   - Reads the tag value from the URL query string, e.g. /tag-view/?tag=Collage
-  - Falls back to page.tag if present.
+  - Falls back to page.tag if present, so existing test pages can still work temporarily.
   - Reads object records from _data/practice_objects.yml.
-  - Resolves local image paths through Jekyll's relative_url filter at build time.
-  - Automatically detects related Field Note posts from _posts.
+  - Automatically detects related Field Note posts from _posts, rather than relying on _data/practice_fieldnotes_pages.yml.
 
-  Expected use:
+  Expected use in a page:
   {% include practice-generated-tag-view.html %}
 
-  Recommended URL patterns:
+  Recommended generic URL pattern:
   /tag-view/?tag=Collage
   /tag-view/?tag=Metadata
   /tag-view/?tag=Visual%20Journals
 {% endcomment %}
 
 <section class="fw-generated-tag-view" data-fallback-tag="{{ page.tag | default: '' | escape }}">
+
   <div class="fw-generated-tag-view-intro">
     <p id="fw-generated-tag-view-description"></p>
+
     <div id="fw-generated-tag-view-fieldnotes-link" class="fw-generated-view-fieldnotes-link" hidden></div>
   </div>
 
   <h2 id="fw-generated-tag-view-gallery-heading" class="fw-generated-tag-view-gallery-heading"></h2>
+
   <div id="fw-generated-tag-view-gallery" class="fw-generated-view-gallery"></div>
 
   <p id="fw-generated-tag-view-empty" class="fw-generated-view-empty" hidden>
@@ -34,34 +36,16 @@
   <nav class="fw-generated-view-navigation" aria-label="Generated view navigation">
     <p class="fw-generated-view-back-link">
       <a href="#" onclick="history.back(); return false;">
-        &larr; Return to previous page
+        ← Return to previous page
       </a>
     </p>
   </nav>
+
 </section>
 
 <script>
 (function () {
-  /*
-   * Construct the object data explicitly so local image paths can be resolved
-   * by Jekyll during the build. Fully qualified external URLs are preserved.
-   */
-  const objectItems = [
-    {% assign first_object_item = true %}
-    {% for item in site.data.practice_objects %}
-      {% unless first_object_item %},{% endunless %}
-      {
-        "id": {{ item.id | jsonify }},
-        "title": {{ item.title | jsonify }},
-        "date": {{ item.date | jsonify }},
-        "image_path": {% if item.image_path %}{% if item.image_path contains '://' %}{{ item.image_path | jsonify }}{% else %}{{ item.image_path | relative_url | jsonify }}{% endif %}{% else %}null{% endif %},
-        "original_filename": {{ item.original_filename | jsonify }},
-        "targets": {{ item.targets | jsonify }},
-        "tags": {{ item.tags | jsonify }}
-      }
-      {% assign first_object_item = false %}
-    {% endfor %}
-  ];
+  const objectItems = {{ site.data.practice_objects | jsonify }};
 
   const fieldnotePosts = [
     {% assign first_fieldnote_post = true %}
@@ -79,9 +63,9 @@
     {% endfor %}
   ];
 
-  const fieldnotesCollectionUrl = {{ '/fieldnotes/' | relative_url | jsonify }};
   const root = document.querySelector('.fw-generated-tag-view');
   const fallbackTag = root ? root.getAttribute('data-fallback-tag') : '';
+
   const params = new URLSearchParams(window.location.search);
   const requestedTag = (params.get('tag') || fallbackTag || '').trim();
 
@@ -127,8 +111,6 @@
       img.className = 'fw-generated-view-image';
       img.src = record.image_path;
       img.alt = record.title || 'Fieldwork object image';
-      img.loading = 'lazy';
-      img.decoding = 'async';
       wrapper.appendChild(img);
     }
 
@@ -148,15 +130,12 @@
     if (descriptionEl) {
       descriptionEl.textContent = 'No tag was provided for this generated view.';
     }
-
     if (headingEl) {
       headingEl.textContent = 'Generated view';
     }
-
     if (emptyEl) {
       emptyEl.hidden = false;
     }
-
     return;
   }
 
@@ -172,26 +151,21 @@
 
   if (relatedFieldnotePosts.length > 0 && fieldnotesLinkEl) {
     const paragraph = document.createElement('p');
-    paragraph.appendChild(
-      document.createTextNode(
-        'If you want to learn more about this topic as part of Fieldwork practice, you can explore '
-      )
-    );
+    paragraph.appendChild(document.createTextNode('If you want to learn more about this topic as part of Fieldwork practice, you can explore '));
 
     const link = document.createElement('a');
-    link.href = `${fieldnotesCollectionUrl}?tag=${encodeURIComponent(requestedTag)}`;
+    link.href = `/fieldnotes/?tag=${encodeURIComponent(requestedTag)}`;
     link.textContent = `${requestedTag} Field Notes`;
 
     paragraph.appendChild(link);
     paragraph.appendChild(document.createTextNode('.'));
+
     fieldnotesLinkEl.appendChild(paragraph);
     fieldnotesLinkEl.hidden = false;
   }
 
   const matchingItems = Array.isArray(objectItems)
-    ? objectItems.filter(function (record) {
-        return includesTag(record, requestedTag);
-      })
+    ? objectItems.filter(function (record) { return includesTag(record, requestedTag); })
     : [];
 
   if (galleryEl) {
@@ -205,5 +179,5 @@
   }
 
   document.title = `${requestedTag} | ${document.title}`;
-}());
+})();
 </script>
