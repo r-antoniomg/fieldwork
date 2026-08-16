@@ -1,9 +1,9 @@
 - title: About
   url: /about/
   description: About fieldwork
-- title: Technical documentation
-  url: /technical-documentation/
-  description: Standards, workflows, and infrastructure
 - title: Release notes
   url: /release-notes/
   description: Publishing history and version notes
+- title: Technical documentation
+  url: /technical-documentation/
+  description: Standards, workflows, and infrastructure
