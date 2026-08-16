@@ -14,11 +14,6 @@
 {% endcomment %}
 
 <section class="fw-manifestation-tag-index">
-  <div class="fw-manifestation-tag-index__intro">
-    <p id="fw-manifestation-tag-index-description"></p>
-  </div>
-
-  <h2 id="fw-manifestation-tag-index-heading">Explore tags</h2>
 
   <div
     id="fw-manifestation-tag-index-list"
@@ -45,7 +40,6 @@
     const params = new URLSearchParams(window.location.search);
     const manifestation = (params.get('manifestation') || '').trim();
 
-    const description = document.getElementById('fw-manifestation-tag-index-description');
     const heading = document.getElementById('fw-manifestation-tag-index-heading');
     const list = document.getElementById('fw-manifestation-tag-index-list');
     const empty = document.getElementById('fw-manifestation-tag-index-empty');
@@ -120,11 +114,8 @@
 
     const manifestationLabel = displayLabel(manifestation);
 
-    if (heading) heading.textContent = `${manifestationLabel} tags`;
-    if (description) {
-      description.textContent = `Explore all tags associated with ${manifestationLabel}.`;
-    }
-
+    if (heading) heading.textContent = `${manifestationLabel.toLocaleLowerCase()} tags`;
+    
     const matchingObjects = Array.isArray(objectItems)
       ? objectItems.filter(function (record) {
           return includesTarget(record, manifestation);
